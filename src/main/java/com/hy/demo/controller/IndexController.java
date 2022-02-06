@@ -1,12 +1,24 @@
 package com.hy.demo.controller;
 
+import com.hy.demo.Entity.User;
+import com.hy.demo.Repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Controller
 public class IndexController {
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping({"","/"})
     public String index(){
@@ -19,12 +31,14 @@ public class IndexController {
     {
         return "user";
     }
+
     @ResponseBody
     @GetMapping("/admin")
     public String admin()
     {
         return "admin";
     }
+
     @ResponseBody
     @GetMapping("/manager")
     public String manager()
@@ -32,25 +46,38 @@ public class IndexController {
         return "manager";
     }
 
-
+    @ResponseBody
     @GetMapping("/login")
     public String login()
     {
         return "login";
     }
 
-    @ResponseBody
-    @GetMapping("/join")
-    public String join()
+    @GetMapping("/loginForm")
+    public String loginForm()
     {
-        return "join";
+        return "loginForm";
     }
 
-    @ResponseBody
-    @GetMapping("/joinProc")
-    public String joinProc()
+    @GetMapping("/joinForm")
+    public String joinForm()
     {
-        return "회원가입완료";
+        return "joinForm";
     }
+
+
+    @ResponseBody
+    @PostMapping("/join")
+    public String join(User user)
+    {
+        user.setRole("ROLE_USER");
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        logger.info(user.toString());
+
+        userRepository.save(user); // 비밀번호가 암호화 되지않으면 시큐리티로 로그인할수없음.
+        return "redirect:/loginForm";
+    }
+
+
 
 }
