@@ -18,6 +18,7 @@ public class IndexController {
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping({"","/"})
@@ -66,13 +67,14 @@ public class IndexController {
     }
 
 
-    @ResponseBody
+
     @PostMapping("/join")
     public String join(User user)
     {
         user.setRole("ROLE_USER");
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        logger.info(user.toString());
+        
+        logger.info("user.toString() = " + user.toString());
 
         userRepository.save(user); // 비밀번호가 암호화 되지않으면 시큐리티로 로그인할수없음.
         return "redirect:/loginForm";
