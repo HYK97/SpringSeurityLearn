@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -14,6 +15,7 @@ import sun.rmi.runtime.Log;
 
 @Configuration
 @EnableWebSecurity //스프링 시큐리티 필터 -> 스프링 필터체인 등록
+@EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true) //secured 애노테이션 활성화 preAuthorize 애노테이션 활성화
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean

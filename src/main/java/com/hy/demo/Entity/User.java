@@ -1,6 +1,7 @@
 package com.hy.demo.Entity;
 
 
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Data
+@Builder
 public class User {
     @Id // primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +24,17 @@ public class User {
     private String role; //ROLE_USER, ROLE_ADMIN
     @CreationTimestamp
     private Timestamp createDate;
+
+    public User() {
+
+    }
+
+    public User(int id, String username, String password, String email, String role, Timestamp createDate) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.createDate = createDate;
+    }
 }
