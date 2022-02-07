@@ -22,6 +22,9 @@ public class User {
     private String password;
     private String email;
     private String role; //ROLE_USER, ROLE_ADMIN
+    // 구글,페이스북,카카오등으로 가입됬을때
+    private String provider;
+    private String providerId;
     @CreationTimestamp
     private Timestamp createDate;
 
