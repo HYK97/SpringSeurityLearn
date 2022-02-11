@@ -19,6 +19,10 @@ import java.util.Date;
 public class InitUser {
     private final InitUserService initUserService;
 
+
+
+
+
     @PostConstruct //분리해줘야함 transactional 이랑 postConstrct랑. 따라서 static으로 나누어 한것
     public void init(){
         initUserService.init();
@@ -29,13 +33,12 @@ public class InitUser {
 
         @PersistenceContext
         private EntityManager em;
+        private BCryptPasswordEncoder bCryptPasswordEncoder =new BCryptPasswordEncoder();
 
-        @Autowired
-        private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
         @Transactional
         public void init(){
-
 
             User user =User.builder()
                     .username("user")

@@ -5,6 +5,7 @@ import com.hy.demo.Repository.UserRepository;
 import com.hy.demo.config.auth.PrincipalDetails;
 import com.hy.demo.config.oauth.provider.FacebookUserInfo;
 import com.hy.demo.config.oauth.provider.GoogleUserInfo;
+import com.hy.demo.config.oauth.provider.NaverUserInfo;
 import com.hy.demo.config.oauth.provider.OAuth2UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +17,15 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
-   private BCryptPasswordEncoder bCryptPasswordEncoder =new BCryptPasswordEncoder();
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder ;
 
     @Autowired
     private UserRepository userRepository;
@@ -64,9 +67,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         }
         else if(userRequest.getClientRegistration().getRegistrationId().equals("facebook")){
             oAuth2UserInfo =new FacebookUserInfo(auth2User.getAttributes());
-        }
-        else
+        }else if (userRequest.getClientRegistration().getRegistrationId().equals("naver")) {
+            oAuth2UserInfo =new NaverUserInfo((Map)auth2User.getAttributes().get("response"));
+        } else {
             logger.info(" 지원하지않는 OAuth 로그인입니다. ");
+        }
 
         String password =bCryptPasswordEncoder.encode("겟인데어");
         String username=oAuth2UserInfo.getProvider()+"_"+oAuth2UserInfo.getProviderId();

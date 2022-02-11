@@ -22,13 +22,13 @@ import sun.rmi.runtime.Log;
 @EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true) //secured 애노테이션 활성화 preAuthorize 애노테이션 활성화
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private PrincipalOauth2UserService principalOauth2UserService;
+
     @Bean
     public BCryptPasswordEncoder encodePwd() {
         return new BCryptPasswordEncoder();
     }
-
-    @Autowired
-    private PrincipalOauth2UserService principalOauth2UserService;
 
 
     @Override
