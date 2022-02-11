@@ -3,6 +3,9 @@ package com.hy.demo.config.oauth;
 import com.hy.demo.Entity.User;
 import com.hy.demo.Repository.UserRepository;
 import com.hy.demo.config.auth.PrincipalDetails;
+import com.hy.demo.config.oauth.provider.FacebookUserInfo;
+import com.hy.demo.config.oauth.provider.GoogleUserInfo;
+import com.hy.demo.config.oauth.provider.OAuth2UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +56,20 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         OAuth2User auth2User =super.loadUser(userRequest);
 
-        String provider =userRequest.getClientRegistration().getClientId(); //google
-        String providerId =auth2User.getAttribute("sub");
-        String email =auth2User.getAttribute("email");
+        String providerId=null;
+            OAuth2UserInfo oAuth2UserInfo =null;
+        //userRequest.getClientRegistration().getRegistrationId() = 회원가입 페이지.
+        if(userRequest.getClientRegistration().getRegistrationId().equals("google")){
+            oAuth2UserInfo =new GoogleUserInfo(auth2User.getAttributes());
+        }
+        else if(userRequest.getClientRegistration().getRegistrationId().equals("facebook")){
+            oAuth2UserInfo =new FacebookUserInfo(auth2User.getAttributes());
+        }
+        else
+            logger.info(" 지원하지않는 OAuth 로그인입니다. ");
+
         String password =bCryptPasswordEncoder.encode("겟인데어");
-        String username=provider+"_"+providerId;
+        String username=oAuth2UserInfo.getProvider()+"_"+oAuth2UserInfo.getProviderId();
         String role ="ROLE_USER";
 
         User userEntity = userRepository.findByUsername(username);
@@ -66,10 +78,10 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             userEntity =User.builder()
                     .username(username)
                     .password(password)
-                    .email(email)
+                    .email(oAuth2UserInfo.getEmail())
                     .role(role)
-                    .provider(provider)
-                    .providerId(providerId)
+                    .provider(oAuth2UserInfo.getProvider())
+                    .providerId(oAuth2UserInfo.getProviderId())
                     .build();
             userRepository.save(userEntity);
         }
