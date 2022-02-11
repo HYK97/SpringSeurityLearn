@@ -16,7 +16,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         
-        logger.info("userRequest = " + userRequest.getClientRegistration());
+        logger.info("userRequest = " + userRequest.getClientRegistration()); //getClientRegistration 으로 어떤 OAuth로 로그인했는지 확인가능
         logger.info("getAccessToken.getTokenValue() = " + userRequest.getAccessToken().getTokenValue());
         logger.info("loadUser(userRequest).getAttributes() = " + super.loadUser(userRequest).getAttributes());
         /**  loadUser(userRequest).getAttributes() 의 리턴값
@@ -37,7 +37,10 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
          * provider = "google"
          * providerId= ="12312423412341231412345123" 이런식으로 저장
          * */
+        // 구글 로그인 버튼 클릭 -> 구글 로그인창 -> 로그인 완료 -> 코드를 리턴받음 ()OAuth-client라이브러리) -> AccessToken 요청 여기까지가
+        //userRequest 정보 -> loadUser함수 호출 -> 구글로부터 회원 프로필을 받아준다.
 
+        OAuth2User auth2User =super.loadUser(userRequest);
         return super.loadUser(userRequest);
     }
 }

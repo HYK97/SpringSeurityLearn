@@ -50,7 +50,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //4-2 기본정보(이메일,아이디,이름,전화번호) 정보가 모자라면 ex) 쇼핑몰 ->(집주소), 백화점몰 ->(등급)
                 .userInfoEndpoint()
                 .userService(principalOauth2UserService); //Tip. 코드X,(액세스 토큰 +사용자 프로필정보)
-
-
     }
 }

@@ -2,10 +2,15 @@ package com.hy.demo.controller;
 
 import com.hy.demo.Entity.User;
 import com.hy.demo.Repository.UserRepository;
+import com.hy.demo.config.auth.PrincipalDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +26,8 @@ public class IndexController {
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -73,6 +80,38 @@ public class IndexController {
 
         userRepository.save(user); // 비밀번호가 암호화 되지않으면 시큐리티로 로그인할수없음.
         return "redirect:/loginForm";
+    }
+
+
+    //일반 로그인
+    @GetMapping("/test/login")
+    @ResponseBody
+    public String loginTest(
+            Authentication authentication,
+            @AuthenticationPrincipal PrincipalDetails userDetails) {
+        //첫번째 방법
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        logger.info("authentication.getPrincipal() = " + principalDetails.getUser());
+        //두번째 방법 두번째는 @AuthenticationPrincipal를 사용해야함
+        logger.info("userDetails.getUsername() = " + userDetails.getUser());
+        return "세션정보 확인하기";
+    }
+
+    //oauth 로그인
+    @GetMapping("/test/oauth/login")
+    @ResponseBody
+    public String loginOAuthTest(
+            Authentication authentication,
+            @AuthenticationPrincipal OAuth2User oAuthUser) {
+        //다운 캐스팅작업 첫번째 방법
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        logger.info("authentication.getPrincipal() = " + oAuth2User.getAttributes());
+
+        // 두번째방법
+        logger.info("oAuthUser = " + oAuthUser.getAttributes());
+
+
+        return "oauth세션정보 확인하기";
     }
 
 

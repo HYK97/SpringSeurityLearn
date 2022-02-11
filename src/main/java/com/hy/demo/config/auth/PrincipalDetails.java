@@ -2,6 +2,7 @@ package com.hy.demo.config.auth;
 
 
 import com.hy.demo.Entity.User;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,6 +18,8 @@ import java.util.Collection;
  *
  * 패키징 순서는 security Session -> Authentication -> userDetails(PrincipalDetails) 순으로 접근한다.
  * */
+@Data
+
 public class PrincipalDetails implements UserDetails {
 
     private User user;// 콤포지션
