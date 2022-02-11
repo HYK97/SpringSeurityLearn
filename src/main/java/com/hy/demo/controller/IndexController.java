@@ -36,9 +36,15 @@ public class IndexController {
         return "index";
     }
 
+
+    //OAuth 로그인을해도 principalDetails
+    //일반로그인도 principalDetails
     @ResponseBody
     @GetMapping("/user")
-    public String user() {
+    public String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        logger.info("principalDetails.getUser() = " + principalDetails.getUser());
+        logger.info(principalDetails.getAttributes()==null ? "일반회원입니다.": "OAuth 외부 회원입니다.");
+
         return "user";
     }
 

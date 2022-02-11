@@ -3,6 +3,7 @@ package com.hy.demo.Entity;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @Builder
+@NoArgsConstructor
 public class User {
     @Id // primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +30,7 @@ public class User {
     @CreationTimestamp
     private Timestamp createDate;
 
-    public User() {
 
-    }
 
     public User(int id, String username, String password, String email, String role, String provider, String providerId, Timestamp createDate) {
         this.id = id;
